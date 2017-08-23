@@ -1,0 +1,48 @@
+<div class="row">
+  <!--<div class="col-xs-6 col-sm-4 col-md-4">
+    <a class="thumbnail" href="/">
+      <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMzA2NDkwODAwM15BMl5BanBnXkFtZTgwODk5MTgzMTE@._V1_SY1000_CR0,0,685,1000_AL_.jpg" alt="">
+      <div class="caption">
+        <h3>captain america the winter soldier</h3>
+      </div>
+    </a>
+  </div>
+  <div class="col-xs-6 col-sm-4 col-md-4">
+    <a class="thumbnail" href="/">
+      <img src="http://cdn3-www.comingsoon.net/assets/uploads/gallery/captain-america-3-1413251820/cpkf2a1.jpg" alt="">
+      <div class="caption">
+        <h3>captain america civil war</h3>
+      </div>
+    </a>
+  </div>
+  <div class="col-xs-6 col-sm-4 col-md-4">
+    <a class="thumbnail" href="/">
+      <img src="http://wwwcdn.howdesign.com/wp-content/uploads/newhope-great-poster-design-great-poster-design.jpg" alt="">
+      <div class="caption">
+        <h3>star wars</h3>
+      </div>
+    </a>
+  </div>-->
+  {{#each movies}}
+   <div class="col-xs-6 col-sm-4 col-md-4">
+    <a class="thumbnail" href="/movie/{{this.id}}">
+      <img src="http://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="">
+      <div class="caption">
+        <h3>{{this.title}} ({{{trimString this.release_date 0 4}}})</h3>
+      </div>
+    </a>
+  </div>
+  {{/each}}
+  
+ 
+</div> 
+<div class="row"> 
+  <nav aria-label="discover movie">
+    <ul class="pager">
+      {{#if prevpage}}
+      <li><a href="/{{position}}/{{prevpage}}">Previous</a></li>
+      {{/if}}
+      <li><a href="/{{position}}/{{nextpage}}">Next</a></li>
+    </ul>
+  </nav>
+</div>
