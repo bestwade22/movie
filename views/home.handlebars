@@ -1,4 +1,11 @@
 <div class="row">
+  <div class="col-xs-6 col-sm-4 col-md-4 h3">{{nowpage}}  {{#if prevpage}}/ page:{{page}}{{/if}}
+  </div>
+</div>
+
+
+
+<div class="row">
   <!--<div class="col-xs-6 col-sm-4 col-md-4">
     <a class="thumbnail" href="/">
       <img src="https://images-na.ssl-images-amazon.com/images/M/MV5BMzA2NDkwODAwM15BMl5BanBnXkFtZTgwODk5MTgzMTE@._V1_SY1000_CR0,0,685,1000_AL_.jpg" alt="">
@@ -42,6 +49,7 @@
       {{#if prevpage}}
       <li><a href="/{{position}}/{{prevpage}}">Previous</a></li>
       {{/if}}
+      <li>{{page}}</li>
       <li><a href="/{{position}}/{{nextpage}}">Next</a></li>
     </ul>
   </nav>

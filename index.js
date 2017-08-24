@@ -52,7 +52,7 @@ app.get('/', function(req, res){
   MovieDB.discoverMovie({ }, (err, respon) => {
     lists = respon.results; 
     
-    res.render('home',{nowpage:"now playing",movies:lists,position:"discover",nextpage:2});
+    res.render('home',{nowpage:"now playing",movies:lists,position:"discover",page:1,nextpage:2});
   });
   // Point at the home.handlebars view
 });
@@ -63,7 +63,7 @@ app.get('/discover/:page', function(req, res){
   MovieDB.discoverMovie({page:page }, (err, respon) => {
     lists = respon.results; 
     //if (page>1) prevbtn = true;
-    res.render('home',{nowpage:"now playing",movies:lists,position:"discover",prevpage:(page-1),nextpage:(page+1)});
+    res.render('home',{nowpage:"now playing",movies:lists,position:"discover",prevpage:(page-1),page:page,nextpage:(page+1)});
   });
   // Point at the home.handlebars view
  
@@ -124,7 +124,7 @@ app.get('/search/:keyword/:page',function(req,res){
   keyword = req.params.keyword;
   MovieDB.searchMovie({query:keyword ,page:page}, (err, respon) => {
     lists = respon.results;
-    res.render('home',{nowpage:"search: "+keyword,movies:lists,position:"search/"+keyword,prevpage:(page-1),nextpage:(page+1)});
+    res.render('home',{nowpage:"search: "+keyword,movies:lists,position:"search/"+keyword,prevpage:(page-1),page:page,nextpage:(page+1)});
   })
 })
 
