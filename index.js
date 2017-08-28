@@ -96,7 +96,7 @@ app.get('/movie/:id', function(req, res){
   var credits = [];
   var id = req.params.id;
   MovieDB.movieInfo({id:id }, (err, respon) => {
-    detail = respon; 
+    detail = respon;
     MovieDB.movieCredits({id:id }, (err, respons) => {
       credits = respons;
       MovieDB.movieReviews({id:id }, (err, response) => {
@@ -132,6 +132,12 @@ app.get('/movie/:id', function(req, res){
   // Point at the home.handlebars view
 });
 
+app.get('/fullmovie/:page', function(req, res){
+  var lists = [];
+  var page = parseInt(req.params.page);
+  res.render('fullmovie',{nowpage:"Full Movies",movies:lists,position:"fullmovie",prevpage:(page-1),page:page,nextpage:(page+1)});
+
+});
 
 app.post('/search/submit',function(req,res){
  
