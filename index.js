@@ -103,7 +103,6 @@ app.get('/movie/:id', function(req, res){
         reviews = response.results;
         MovieDB.movieTrailers({id:id }, (err, respo) => {
           trailers = respo.youtube;
-          console.log(trailers);
           var directors = [];
           var writers = [];
           var cast = [];
