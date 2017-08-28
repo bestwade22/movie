@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-xs-6 col-sm-4 col-md-4 h3">{{nowpage}}  {{#if prevpage}}/ page:{{page}}{{/if}}
+  <div class="col-xs-12 col-sm-12 col-md-12 h3">{{nowpage}}  / page:{{page}}
   </div>
 </div>
 
@@ -36,6 +36,7 @@
       <img src="http://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="">
       <div class="caption">
         <h3>{{this.title}} ({{{trimString this.release_date 0 4}}})</h3>
+        {{#if ../date}}<h5>release date: {{this.release_date}}</h5>{{/if}}
       </div>
     </a>
   </div>
@@ -50,7 +51,10 @@
       <li><a href="/{{position}}/{{prevpage}}">Previous</a></li>
       {{/if}}
       <li>{{page}}</li>
+      {{#if nextpage}}
       <li><a href="/{{position}}/{{nextpage}}">Next</a></li>
+      {{/if}}
     </ul>
   </nav>
 </div>
+<br><br>
