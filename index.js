@@ -45,7 +45,7 @@ const MovieDB = require('moviedb')('5f3fde20bd486e81a18ffb9e0bbd0604');
 app.use(require('cookie-parser')(credentials.cookieSecret));
 
 // Defines the port to run on
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 8080);
 // when it receives a request
 app.use(express.static(__dirname + 'public'));
 app.get('/', function(req, res){
