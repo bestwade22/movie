@@ -158,6 +158,69 @@ app.get('/search/:keyword/:page',function(req,res){
   })
 })
 
+app.get('/insert',function(req,res){
+  var lists = [];
+  
+    res.render('insert',{nowpage:"Insert",movies:lists,position:"Insert",prevpage:1,page:1,nextpage:1,query : req.query});
+
+})
+
+app.post('/insert/submit',function(req,res){
+ 
+  //console.log(req.body);
+  imdbId = req.body.imdbid;
+ MovieDB.find({id:imdbId ,external_source:"imdb_id"}, (err, respon) => {
+   
+   if(err){
+     res.redirect(303, '/insert?message='+err);
+   }else{
+      movie = respon.movie_results[0]
+      id = movie.id;
+      //console.log(movie);
+      MovieDB.movieInfo({id:id }, (err, respon) => {
+        detail = [];
+        detail.push(respon);
+        MovieDB.movieCredits({id:id }, (err, respons) => {
+          credits = respons;
+          MovieDB.movieReviews({id:id }, (err, response) => {
+            reviews = response.results;
+            MovieDB.movieTrailers({id:id }, (err, respo) => {
+              trailers = respo.youtube;
+              var directors = [];
+              var writers = [];
+              var cast = [];
+              credits.crew.forEach(function(entry){
+               if (entry.job === 'Director') {
+                  directors.push(entry.name);
+               }else if (entry.job === 'Writer'||entry.job === 'Screenplay') {
+                  writers.push(entry.name);
+               }
+              })
+              credits.cast.forEach(function(entry){
+               if (entry.order <= 4) {
+                  cast.push(entry.name);
+               }
+              })
+        
+              detail[0].directors=directors;
+              detail[0].writers=writers;
+              detail[0].cast=cast;
+              detail[0].reviews=reviews;
+              detail[0].trailers=trailers;
+              detail[0].movie_link=req.body.link;
+              detail[0].insert_time = new Date();
+              console.log(detail[0]);
+              
+              res.redirect('/insert?message=finish insert: '+movie.original_title);
+              });
+           });
+        });
+      });
+      
+   }
+  })
+})/**/
+
 
 app.get('/about', function(req, res){
   res.render('about');
@@ -214,5 +277,6 @@ app.use(function(err, req, res, next) {
   res.render('500');
 });
 app.listen(app.get('port'),function(){
+
   console.log("express started");
 });

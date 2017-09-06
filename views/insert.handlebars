@@ -1,0 +1,33 @@
+<div class="page-header">
+<h3>Movie Insert</h3>
+</div>
+<div class="contactUs">
+<form class="formInsert" role="form"
+  action="/insert/submit" method="POST">
+ 
+  <div class="form-group">
+    <label for="fieldImdbId" class="col-sm-2 control-label">
+    Imdb ID</label>
+    <div class="col-sm-4">
+      <input type="text" class="form-control" id="fieldImdbId"
+      name="imdbid">
+    </div>
+  </div> <!-- End of form-group -->
+ <div class="form-group">
+    <label for="fieldLink" class="col-sm-2 control-label">
+    youtube link:</label>
+    <div class="col-sm-4">
+      <input type="text" class="form-control" id="fieldLink"
+      name="link">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <div class="col-sm-4">
+      <button type="submit" class="btn btn-default">Submit</button>
+    </div>
+  </div> <!-- End of form-group -->
+ 
+</form>
+ <h3>{{#if query.message}}{{query.message}}{{/if}}</h3>
+</div> <!-- End of contactUs -->
