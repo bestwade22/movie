@@ -1,0 +1,51 @@
+<style>
+  .banner_text{
+    position: absolute;
+    bottom: 30px;
+    width:calc( 100% - 40px );
+    text-shadow: -1px 0 #eee, 0 1px #eee, 1px 0 #eee, 0 -1px #eee;
+    background-color:rgba(0, 0, 0, 0.5);
+  }
+
+</style>
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 h3">{{nowpage}}  / page:{{page}}
+  </div> <br><br><br>
+   {{#each movies}}
+   <div class="hidden-xs col-sm-4 col-md-4">
+    <a class="thumbnail" href="/theater/{{this.id}}">
+      <img src="http://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="">
+      <div class="caption">
+        <h3>{{this.original_title}} ({{{trimString this.release_date 0 4}}})</h3>
+      </div>
+    </a>
+  </div>
+  {{/each}}
+  
+  {{#each movies}}
+  <div class="col-xs-12 visible-xs">
+    <a class="thumbnail" href="/theater/{{this.id}}">
+      <img src="http://image.tmdb.org/t/p/w780/{{this.backdrop_path}}" alt="">
+      <div class="caption banner_text">
+        <h2>{{this.original_title}} ({{{trimString this.release_date 0 4}}})</h2>
+      </div>
+    </a>
+  </div>
+  {{/each}}
+  
+
+</div>
+<div class="row"> 
+  <nav aria-label="discover movie">
+    <ul class="pager">
+      {{#if prevpage}}
+      <li><a href="/{{position}}/{{prevpage}}">Previous</a></li>
+      {{/if}}
+      <li>{{page}}</li>
+      {{#if nextpage}}
+      <li><a href="/{{position}}/{{nextpage}}">Next</a></li>
+      {{/if}}
+    </ul>
+  </nav>
+</div>
+<br><br>

@@ -1,3 +1,5 @@
+
+
 <div class="page-header">
 <h3>Movie Insert</h3>
 </div>
@@ -29,5 +31,70 @@
   </div> <!-- End of form-group -->
  
 </form>
- <h3>{{#if query.message}}{{query.message}}{{/if}}</h3>
+ 
 </div> <!-- End of contactUs -->
+<div class="row movie_list">
+  <div  class="col-md-12 col-xs-12"><h3>{{#if query.message}}{{query.message}}{{/if}}</h3></div>
+  {{#each db}}
+    <div class="col-md-3 col-xs-3 id_{{this.id}} movie_box">
+    {{this.title}}
+    <div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{this.source}}" allowfullscreen></iframe></div>
+    <input class = "btnremove" type="button" value="remove" movie_id="{{this.id}}"/>
+    </div>
+  {{/each}}
+</div>
+
+<div class="row"> 
+  <nav aria-label="discover movie">
+    <ul class="pager">
+      <li><a class="page_pre" href="javascript:void(0)" page=-1>Previous</a></li>
+      <li class="page_num">1</li>
+      <li><a class="page_next" href="javascript:void(0)"  page=2>Next</a></li>
+    </ul>
+  </nav>
+</div>
+
+<script type="application/javascript">
+$(function() {
+         
+    $(".movie_list").on("click",'.btnremove',function() {
+   
+        id = $(this).attr('movie_id'); 
+        console.log( id );
+        $.ajax({
+            dataType: 'json',
+            jsonpCallback: '_wrapper',
+            data: {"id":id},
+            type: 'POST',
+            url: "/delete",
+            success: function (result) {
+                  console.log('success');
+                  $(".id_"+id).hide();
+                }
+            });
+    });
+
+   $('.page_pre,.page_next').on("click",function() {
+   
+        topage = parseInt($(this).attr('page')); 
+        $.ajax({
+            dataType: 'json',
+            jsonpCallback: '_wrapper',
+            data: {"page":topage},
+            type: 'POST',
+            url: "/getmovies",
+            success: function (result) {
+                  console.log(result.movies);
+                  $(".movie_box").remove();
+                  $.each(result.movies, function (i, v) {
+                      temp = '<div class="col-md-3 col-xs-3 id_'+v.id+' movie_box">'+v.title+'<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/'+v.source+'" allowfullscreen></iframe></div><input class = "btnremove" type="button" value="remove" movie_id="'+v.id+'"/></div>'
+                      $(".movie_list").append(temp);
+                  });
+                  $('.page_num').html(topage);
+                  $('.page_pre').attr('page',topage-1);
+                  $('.page_next').attr('page',topage+1);
+                }
+            });
+    });
+});
+</script>

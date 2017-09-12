@@ -16,10 +16,11 @@ app.disable('x-powered-by');
 // 404.handlebars and 500.handlebars
 var handlebars = require('express-handlebars').create({defaultLayout:'main',
                                                        helpers: {
-                                                                    trimString:  function(passedString, startstring, endstring) {
+                                                                    trimString:  function(passedString, startstring, endstring){
                                                                          var theString = passedString.substring( startstring, endstring );
                                                                          return theString;
                                                                       }
+
                                                                 }
                                                       });
 app.engine('handlebars', handlebars.engine);
@@ -41,6 +42,10 @@ var credentials = require('./credentials.js');
 //install moviedb
 const MovieDB = require('moviedb')('5f3fde20bd486e81a18ffb9e0bbd0604');
 
+
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
+var url = 'mongodb://127.0.0.1:27017/moviedb'
 
 app.use(require('cookie-parser')(credentials.cookieSecret));
 
@@ -132,10 +137,61 @@ app.get('/movie/:id', function(req, res){
   // Point at the home.handlebars view
 });
 
-app.get('/fullmovie/:page', function(req, res){
+app.get('/fullmovies/:page', function(req, res){
   var lists = [];
   var page = parseInt(req.params.page);
-  res.render('fullmovie',{nowpage:"Full Movies",movies:lists,position:"fullmovie",prevpage:(page-1),page:page,nextpage:(page+1)});
+      MongoClient.connect(url,function(err,db){
+        if(err){
+          msg = "Unable to connect to the server";
+        }else{
+          var collection = db.collection('movies');
+          collection.aggregate([{$sort:{"insert_time":-1}},
+                               { $group: { _id: null, count: { $sum: 1 } ,movies :{'$push':{'id':'$id','original_title':'$original_title','poster_path':'$poster_path','release_date':'$release_date','backdrop_path':'$backdrop_path','insert_time':'$insert_time'} } }},
+            {$project:{'_id':false,"count":true, movies:{ $slice: [ "$movies", page*7-7,7 ]}}}
+                               
+            //,{$project:{"movies.id":true}}'$$ROOT'
+                               //{$limit:7},{$skip:(7)}
+                               ]).toArray(function(err,result){
+            if(err){
+              console.log(err)
+              msg = err;
+            }else if(result[0].count){//result[0].count
+              console.log(result[0].movies[0]);
+              msg="success";
+              total_page = Math.ceil(result[0].count / 7);
+              
+              if (page>=total_page) {nextpage = 0} else {nextpage = page+1;}
+              res.render('fullmovies',{nowpage:"Full Movies",movies:result[0].movies,position:"fullmovies",prevpage:(page-1),page:page,nextpage:nextpage, msg : msg});
+            }
+            db.close();
+          })
+        }
+
+      });
+
+});
+app.get('/theater/:id', function(req, res){
+  var movie = [];
+  var id = parseInt(req.params.id);
+  
+   MongoClient.connect(url,function(err,db){
+        if(err){
+          console.log("connect err"+err);
+        }else{
+          var collection = db.collection('movies');
+          collection.aggregate([
+            {$match:{"id":id}}
+          ]).toArray(function(err,result){
+            if(err){
+              console.log("collection err"+err);
+            }else if(result.length){
+              res.render('theater',{nowpage:result[0].title,movie:result[0]});
+            }
+            db.close();
+          });
+        }
+   });
+  
 
 });
 
@@ -160,8 +216,24 @@ app.get('/search/:keyword/:page',function(req,res){
 
 app.get('/insert',function(req,res){
   var lists = [];
-  
-    res.render('insert',{nowpage:"Insert",movies:lists,position:"Insert",prevpage:1,page:1,nextpage:1,query : req.query});
+
+    MongoClient.connect(url,function(err,db){
+      if(err){
+        error_msg = "Unable to connect to the server";
+      }else{
+        var collection = db.collection('movies');
+        collection.find({}).sort({"insert_time": -1}).limit(7).toArray(function(err,result){
+          if(err){
+            error_msg = err;
+          }else if(result.length){
+            res.render('insert',{nowpage:"Insert",movies:lists,position:"Insert",prevpage:1,page:1,nextpage:1,query : req.query,db:result});
+          }
+          db.close();
+        })
+      }
+      
+    });
+    
 
 })
 
@@ -208,10 +280,37 @@ app.post('/insert/submit',function(req,res){
               detail[0].reviews=reviews;
               detail[0].trailers=trailers;
               detail[0].movie_link=req.body.link;
+              detail[0].imdbid=imdbId;
               detail[0].insert_time = new Date();
               console.log(detail[0]);
+             
+              MongoClient.connect(url,function(err,db){
+                if(err){
+                  error_msg = "Unable to connect to the server";
+                  db.close();
+                }else{
+                  var collection = db.collection('movies');
+                  
+                  collection.find({"imdbid":imdbId}).toArray(function(error,result){
+                    if(result.length){
+                        collection.update({"imdbid":imdbId},{$set:{"movie_link":req.body.link}},function (err, result) {
+                            if (err) throw err;
+                            res.redirect('/insert?message=finish update: '+movie.original_title);
+                         });
+                    }else{
+                       collection.insert(detail[0],function(error,resu){
+                          res.redirect('/insert?message=finish insert: '+movie.original_title);
+                          db.close();
+                        });
+                    }
+                    
+                  })
+                  
+                 
+                }
+                
+              });
               
-              res.redirect('/insert?message=finish insert: '+movie.original_title);
               });
            });
         });
@@ -221,6 +320,34 @@ app.post('/insert/submit',function(req,res){
   })
 })/**/
 
+app.post('/delete',function(req,res){
+  
+  MongoClient.connect(url,function(error,db){
+    var collection = db.collection('movies');
+    collection.remove({"id":parseInt(req.body.id)},function(err,result){
+         if (err) {
+                  console.log('errrrrrrrrrror:'+err);
+              }
+              db.close();
+         res.status(200).json({'msg':'success'})   
+    });
+  });
+})
+
+app.post('/getmovies',function(req,res){
+  
+  MongoClient.connect(url,function(error,db){
+    var collection = db.collection('movies');
+    collection.find({}).limit(7).sort({"insert_time": -1}).skip(parseInt(req.body.page)*7-7).toArray(function(err,result){
+         if (err) {
+                  console.log(err);
+              }
+              db.close();
+          //console.log(result);
+         res.status(200).json({'movies':result})   
+    });
+  });
+})
 
 app.get('/about', function(req, res){
   res.render('about');
