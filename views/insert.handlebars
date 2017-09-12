@@ -38,7 +38,7 @@
   {{#each db}}
     <div class="col-md-3 col-xs-3 id_{{this.id}} movie_box">
     {{this.title}}
-    <div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{this.source}}" allowfullscreen></iframe></div>
+    <div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{this.movie_link}}" allowfullscreen></iframe></div>
     <input class = "btnremove" type="button" value="remove" movie_id="{{this.id}}"/>
     </div>
   {{/each}}
