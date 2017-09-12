@@ -87,7 +87,7 @@ $(function() {
                   console.log(result.movies);
                   $(".movie_box").remove();
                   $.each(result.movies, function (i, v) {
-                      temp = '<div class="col-md-3 col-xs-3 id_'+v.id+' movie_box">'+v.title+'<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/'+v.source+'" allowfullscreen></iframe></div><input class = "btnremove" type="button" value="remove" movie_id="'+v.id+'"/></div>'
+                      temp = '<div class="col-md-3 col-xs-3 id_'+v.id+' movie_box">'+v.title+'<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/'+v.movie_link+'" allowfullscreen></iframe></div><input class = "btnremove" type="button" value="remove" movie_id="'+v.id+'"/></div>'
                       $(".movie_list").append(temp);
                   });
                   $('.page_num').html(topage);
