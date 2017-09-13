@@ -156,7 +156,7 @@ app.get('/fullmovies/:page', function(req, res){
               console.log(err)
               msg = err;
             }else if(result[0].count){//result[0].count
-              console.log(result[0].movies[0]);
+              //console.log(result[0].movies[0]);
               msg="success";
               total_page = Math.ceil(result[0].count / 7);
               
