@@ -231,14 +231,11 @@ app.get('/insert',function(req,res){
           db.close();
         })
       }
-      
     });
-    
-
 })
 
 app.post('/insert/submit',function(req,res){
- 
+  time_now = new Date(); 
   //console.log(req.body);
   imdbId = req.body.imdbid;
  MovieDB.find({id:imdbId ,external_source:"imdb_id"}, (err, respon) => {
@@ -281,7 +278,7 @@ app.post('/insert/submit',function(req,res){
               detail[0].trailers=trailers;
               detail[0].movie_link=req.body.link;
               detail[0].imdbid=imdbId;
-              detail[0].insert_time = new Date();
+              detail[0].insert_time = time_now;
               console.log(detail[0]);
              
               MongoClient.connect(url,function(err,db){
@@ -293,7 +290,7 @@ app.post('/insert/submit',function(req,res){
                   
                   collection.find({"imdbid":imdbId}).toArray(function(error,result){
                     if(result.length){
-                        collection.update({"imdbid":imdbId},{$set:{"movie_link":req.body.link}},function (err, result) {
+                        collection.update({"imdbid":imdbId},{$set:{"movie_link":req.body.link,"insert_time":time_now}},function (err, result) {
                             if (err) throw err;
                             res.redirect('/insert?message=finish update: '+movie.original_title);
                          });
@@ -333,6 +330,31 @@ app.post('/delete',function(req,res){
     });
   });
 })
+
+app.post('/update',function(req,res){
+  time_now = new Date();
+  MongoClient.connect(url,function(error,db){
+    var collection = db.collection('movies');
+    collection.findOneAndUpdate(
+          {"id":parseInt(req.body.id)},{$set:{"insert_time":time_now}},
+          { new: true },
+          function (err, documents) {
+            res.status(200).json({'msg':'success','affected': documents})
+              //res.send({ error: err, affected: documents });
+              db.close();
+          }
+      );
+        /*collection.update({"id":parseInt(req.body.id)},{$set:{"insert_time":time_now}},function(err,result){
+           if (err) {
+                    console.log('errrrrrrrrrror:'+err);
+                }
+                db.close();
+           res.status(200).json({'msg':'success',})   
+        });*/
+    
+  });
+})
+
 
 app.post('/getmovies',function(req,res){
   
