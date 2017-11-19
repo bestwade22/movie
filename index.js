@@ -179,7 +179,7 @@ app.get('/theater/:id', function(req, res){
           console.log("connect err"+err);
         }else{
           var collection = db.collection('movies');
-          collection.aggregate([
+          /*collection.aggregate([
             {$match:{"id":id}}
           ]).toArray(function(err,result){
             if(err){
@@ -188,7 +188,17 @@ app.get('/theater/:id', function(req, res){
               res.render('theater',{nowpage:result[0].title,movie:result[0]});
             }
             db.close();
-          });
+          });*/
+          collection.findOneAndUpdate(
+              { "id":id },
+              { $inc: {"views":1} },
+              { new: true },
+              function (err, documents) {
+                console.log(documents.value);
+                res.render('theater',{nowpage:documents.value.title,movie:documents.value});
+                  db.close();
+              }
+          );
         }
    });
   
@@ -370,6 +380,32 @@ app.post('/getmovies',function(req,res){
     });
   });
 })
+
+
+app.post('/getrelatedmovies',function(req,res){
+  
+  genre = req.body.genre
+ 
+  detail = {};
+    
+    MongoClient.connect(url,function(err,db){
+        if(err){
+          msg = "Unable to connect to the server";
+        }else{
+          var collection = db.collection('movies');
+          
+         //collection.find({"startDateEastern":date}).limit(4)
+         collection.aggregate([ {$match : {$and:[{"genres.name":genre[0]},{"genres.name":genre[1]}]} }, { $sample : { size : 4}} ]).toArray(function(error,result){
+            
+            db.close();
+           //console.log(result);
+            res.status(200).json({'movies':result})
+            
+          })
+        }
+    })
+})
+
 
 app.get('/about', function(req, res){
   res.render('about');

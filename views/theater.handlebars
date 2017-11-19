@@ -1,7 +1,8 @@
 
 
 <div class="row">
-  <div class="col-md-12 h1">{{movie.title}} ({{{trimString movie.release_date 0 4}}})</div>
+  <div class="col-md-9 col-xs-10 h1">{{movie.title}} ({{{trimString movie.release_date 0 4}}})</div>
+  <div class="col-md-3 col-xs-2 h3">{{#if movie.views}}views: {{movie.views}}{{/if}}</div>
 </div>
 <br>
 <div class="row">
@@ -26,3 +27,39 @@
       </div>
 </div>
 
+<script id="movie-template" type="text/x-handlebars-template">
+  <div class="col-xs-6 col-sm-4 col-md-4">
+    <a class="thumbnail" href="/">
+      <img src="{{movie.poster_path}}" alt="">
+      <div class="caption">
+        <h3>{{movie.title}}</h3>
+      </div>
+    </a>
+  </div>
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
+<script type="application/javascript">
+$(function() {
+  
+  
+  function getRelatedMovies(){
+  
+     genre = ["{{movie.genres.1.name}}","{{movie.genres.2.name}}"]; 
+     $.ajax({
+            dataType: 'json',
+            jsonpCallback: '_wrapper',
+            data: {"genre":genre},
+            type: 'POST',
+            url: "/getrelatedmovies",
+            success: function (result) {
+                  //console.log(result.affected.value.title);
+                  var source   = document.getElementById("movie-template").innerHTML;
+                  var template = Handlebars.compile(source);
+                }
+            });
+    
+  
+  }
+
+})
+</script>
