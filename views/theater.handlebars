@@ -1,20 +1,22 @@
 
 
 <div class="row">
-  <div class="col-md-9 col-xs-10 h1">{{movie.title}} ({{{trimString movie.release_date 0 4}}})</div>
-  <div class="col-md-3 col-xs-2 h3">{{#if movie.views}}views: {{movie.views}}{{/if}}</div>
+  <div class="col-md-9 col-xs-12 h1">{{movie.title}} ({{{trimString movie.release_date 0 4}}})</div>
+  
 </div>
 <br>
 <div class="row">
   <img  class="col-md-5 col-xs-12" src="http://image.tmdb.org/t/p/w500/{{movie.poster_path}}" alt="">
   <div class="col-md-7 col-xs-12">
      <div class="row ">
+         
          <div class="col-md-8 col-xs-12 h4">Director:<h3>{{movie.directors}}</h3></div>
          
          <div class="col-md-8 col-xs-12 h4">Writer:<h3>{{movie.writers}}</h3></div>
          
-         <div class="col-md-8 col-xs-12 h4">Cast:<h3>{{movie.cast}}</h3></div><br><br>
-         
+         <div class="col-md-8 col-xs-12 h4">Cast:<h3>{{movie.cast}}</h3></div>
+         <div class="col-md-8 col-xs-12 h4">Rating:<h3>{{movie.vote_average}}/10</h3></div>
+         {{#if movie.views}}<div class="col-md-8 col-xs-12  h3">views: {{movie.views}}</div>{{/if}}<br><br>
      </div>
   </div>
   
@@ -26,21 +28,34 @@
             <div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{movie.movie_link}}" allowfullscreen></iframe></div><br><br>
       </div>
 </div>
-
+<div class="row related-movies">
+     <div class="col-xs-12 h3">Related Movies:</div> 
+</div>
 <script id="movie-template" type="text/x-handlebars-template">
+\{{#each movies}}
   <div class="col-xs-6 col-sm-4 col-md-4">
-    <a class="thumbnail" href="/">
-      <img src="{{movie.poster_path}}" alt="">
+    <a class="thumbnail" href="/theater/\{{this.id}}">
+      <img src="http://image.tmdb.org/t/p/w500/\{{this.poster_path}}" alt="">
+      <div class="logos">
+        <div class="rating">IMDB:<br>\{{this.vote_average}}</div>
+        <div class="full_logo">Full</div>
+      </div>
       <div class="caption">
-        <h3>{{movie.title}}</h3>
+        <h3>\{{this.title}} (\{{{trimString this.release_date 0 4}}})</h3>
       </div>
     </a>
   </div>
+\{{/each}}
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
 <script type="application/javascript">
 $(function() {
   
+  Handlebars.registerHelper('trimString', function(passedString, startstring, endstring){
+       var theString = passedString.substring( startstring, endstring );
+       return theString;
+    });
+
   
   function getRelatedMovies(){
   
@@ -53,13 +68,16 @@ $(function() {
             url: "/getrelatedmovies",
             success: function (result) {
                   //console.log(result.affected.value.title);
+                  
                   var source   = document.getElementById("movie-template").innerHTML;
                   var template = Handlebars.compile(source);
+                  var html    = template(result);
+                  $('.related-movies').append(html);
                 }
             });
     
   
   }
-
+  getRelatedMovies();
 })
 </script>

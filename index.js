@@ -28,8 +28,10 @@ app.set('view engine', 'handlebars');
 
 // Required when using POST to parse encoded data
 // npm install --save body-parser
+var bodyParser = require('body-parser');
+app.use(bodyParser.json()); 
 app.use(require('body-parser').urlencoded({extended: true}));
- 
+
 // Formidable is required to accept file uploads
 // npm install --save formidable
 var formidable = require('formidable');
@@ -52,13 +54,13 @@ app.use(require('cookie-parser')(credentials.cookieSecret));
 // Defines the port to run on
 app.set('port', process.env.PORT || 3000);
 // when it receives a request
-app.use(express.static(__dirname + 'public'));
+app.use(express.static(__dirname + '/public'));
 app.get('/', function(req, res){
   var lists = [];
   MovieDB.discoverMovie({ }, (err, respon) => {
     lists = respon.results; 
-    
-    res.render('home',{nowpage:"Home",movies:lists,position:"discover",page:1,nextpage:2});
+    res.redirect('/fullmovies/1');
+    //res.render('home',{nowpage:"Home",movies:lists,position:"discover",page:1,nextpage:2});
   });
   // Point at the home.handlebars view
 });
@@ -146,7 +148,7 @@ app.get('/fullmovies/:page', function(req, res){
         }else{
           var collection = db.collection('movies');
           collection.aggregate([{$sort:{"insert_time":-1}},
-                               { $group: { _id: null, count: { $sum: 1 } ,movies :{'$push':{'id':'$id','original_title':'$original_title','poster_path':'$poster_path','release_date':'$release_date','backdrop_path':'$backdrop_path','insert_time':'$insert_time'} } }},
+                               { $group: { _id: null, count: { $sum: 1 } ,movies :{'$push':{'id':'$id','original_title':'$original_title','poster_path':'$poster_path','release_date':'$release_date','backdrop_path':'$backdrop_path','insert_time':'$insert_time','vote_average':'$vote_average'} } }},
             {$project:{'_id':false,"count":true, movies:{ $slice: [ "$movies", page*7-7,7 ]}}}
                                
             //,{$project:{"movies.id":true}}'$$ROOT'
@@ -376,11 +378,45 @@ app.post('/getmovies',function(req,res){
               }
               db.close();
           //console.log(result);
-         res.status(200).json({'movies':result})   
+         res.status(200).json({'movies':result});
     });
   });
 })
 
+app.post('/moviesapi', function(req, res) {
+    var sort = req.body.sort;
+    var genre = req.body.genre;
+    var page = parseInt(req.body.page);
+    var match_year = JSON.parse(req.body.year);
+    match_genre = {};
+    sort_query = {};
+    sort_query[sort] = -1;
+    if(genre !== 'all'){
+      match_genre = {"genres.name": genre};
+    }
+    MongoClient.connect(url,function(error,db){
+    var collection = db.collection('movies');
+    //collection.find({}).limit(7).sort({sort: -1}).skip(parseInt(req.body.page)*7-7)
+    //
+    collection.aggregate([
+      {$addFields: {  hotrate: { $multiply: [ {$divide: [ "$views", {$subtract: [ new Date(), "$insert_time" ]}]}, 1000000000 ] }, sortby: "$"+sort,release_year:{$substr: [ "$release_date", 0, 4 ]}}},
+      {$match : {$and: [ match_genre ,match_year ]}},
+      {$sort:sort_query},
+      {$group: { _id: null, count: { $sum: 1 },total_page:{ $sum: 1/7 },movies :{'$push':{'id':'$id','original_title':'$original_title','poster_path':'$poster_path','release_date':'$release_date','backdrop_path':'$backdrop_path','insert_time':'$insert_time','vote_average':'$vote_average','genre':'$genres','sortby':'$sortby','views':'$views','hotrate':'$hotrate','release_year':'$release_year'} } }},
+            {$project:{'_id':false,"count":true,page:{$multiply: [1,page]},"total_page":{$ceil:"$total_page" }, movies:{ $slice: [ "$movies", page*7-7,7 ]}}}
+                               
+            //,{$project:{"movies.id":true}}'$$ROOT'
+                               //{$limit:7},{$skip:(7)}
+           ]).toArray(function(err,result){
+         if (err) {
+                  console.log(err);
+              }
+              db.close();
+          //console.log(result);
+         res.status(200).json(result[0]);
+    });
+  });
+});
 
 app.post('/getrelatedmovies',function(req,res){
   

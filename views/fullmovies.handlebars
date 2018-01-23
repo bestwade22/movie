@@ -1,41 +1,123 @@
 <style>
-  .banner_text{
-    position: absolute;
-    bottom: 30px;
-    width:calc( 100% - 40px );
-    text-shadow: -1px 0 #eee, 0 1px #eee, 1px 0 #eee, 0 -1px #eee;
-    background-color:rgba(0, 0, 0, 0.5);
-  }
+
 
 </style>
 <div class="row">
-  <div class="col-xs-12 col-sm-12 col-md-12 h3">{{nowpage}}  / page:{{page}}
-  </div> <br><br><br>
-   {{#each movies}}
+	<div class="col-xs-12 col-sm-12 col-md-12 h3">{{nowpage}}</div> <br><br><br>
+</div>
+
+<form class="movie_form">
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+      <div class="btn-group" role="group">
+        <select class="form-page form-control border-right" name="sort">
+          <option value="insert_time" selected="selected">Newest Update</option>
+          <option value="release_date" >Release Date</option>
+          <option value="vote_average" >IMDB Rating</option>
+          <option value="views" >Views</option>
+          <option value="hotrate" >Hot Rate</option>
+        </select>
+      </div>
+      
+      <div class="btn-group" role="group">
+        <!--<button type="button" class="btn btn-default dropdown-toggle border-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="#">Dropdown link</a></li>
+          <li><a href="#">Dropdown link</a></li>
+        </ul>-->
+        <select class="form-page form-control border-right" name="page">
+          <option value="1" selected="selected">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-default borderless"  data-toggle="modal" data-target="#myModal">Filter <span class="glyphicon glyphicon-filter" aria-hidden="true"></span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <!--<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Filter</h4>
+      </div>-->
+      <div class="modal-body">
+        <h4 class="modal-title" id="myModalLabel">Genres:</h4>
+        <select class="form-control" name="genre">
+          <option selected="selected" value="all">All</option>
+          <option value="Action">Action</option>
+          <option value="Drama">Drama</option>
+          <option value="Crime">Crime</option>
+          <option value="Mystery">Mystery</option>
+          <option value="Thriller">Thriller</option>
+        </select>
+        <h4 class="modal-title" id="myModalLabel">Year:</h4>
+        <select class="form-control" name="year">
+          <option selected="selected" value='{}'>All</option>
+          <option value='{ "release_year": "2018" }'>2018</option>
+          <option value='{ "release_year": "2017" }'>2017</option>
+          <option value='{ "release_year": "2016" }'>2016</option>
+          <option value='{ "release_year": "2015" }'>2015</option>
+          <option value='{ "release_year": "2014" }'>2014</option>
+          <option value='{ "release_year": "2013" }'>2013</option>
+          <option value='{ "release_year":  {"$gte":"2010","$lte": "2019"} }'>2010s</option>
+          <option value='{ "release_year":  {"$gte":"2000","$lte": "2009"} }'>2000s</option>
+          <option value='{ "release_year":  {"$gte":"1990","$lte": "1999"} }'>1990s</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary btn-filter" data-dismiss="modal">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+<br>
+<div class="row movies-container">
+  
+   <!--{{#each movies}}
    <div class="hidden-xs col-sm-4 col-md-4">
     <a class="thumbnail" href="/theater/{{this.id}}">
       <img src="http://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="">
+      <div class="logos">
+        <div class="rating">IMDB:<br>{{this.vote_average}}</div>
+        <div class="full_logo">Full</div>
+      </div>
       <div class="caption">
         <h3>{{this.original_title}} ({{{trimString this.release_date 0 4}}})</h3>
       </div>
     </a>
   </div>
-  {{/each}}
-  
-  {{#each movies}}
   <div class="col-xs-12 visible-xs">
     <a class="thumbnail" href="/theater/{{this.id}}">
       <img src="http://image.tmdb.org/t/p/w780/{{this.backdrop_path}}" alt="">
+      <div class="logos">
+        <div class="rating">IMDB:<br>{{this.vote_average}}</div>
+        <div class="full_logo">Full</div>
+      </div>
       <div class="caption banner_text">
-        <h2>{{this.original_title}} ({{{trimString this.release_date 0 4}}})</h2>
+        <h3>{{this.original_title}} ({{{trimString this.release_date 0 4}}})</h3>
       </div>
     </a>
   </div>
-  {{/each}}
-  
-
+  {{/each}}-->
 </div>
-<div class="row"> 
+
+<!--<div class="row"> 
   <nav aria-label="discover movie">
     <ul class="pager">
       {{#if prevpage}}
@@ -47,5 +129,254 @@
       {{/if}}
     </ul>
   </nav>
-</div>
+</div>-->
 <br><br>
+
+
+<script id="movie-template" type="text/x-handlebars-template">
+\{{#each movies}}
+   <div class="hidden-xs col-sm-4 col-md-4">
+    <a class="thumbnail" href="/theater/\{{this.id}}">
+      <img src="http://image.tmdb.org/t/p/w500/\{{this.poster_path}}" alt="">
+      <div class="logos">
+        <div class="rating">IMDB:<br>\{{this.vote_average}}</div>
+        <div class="full_logo">Full</div>
+      </div>
+      <div class="caption">
+        <h3>\{{this.original_title}} (\{{{trimString this.release_date 0 4}}})</h3>
+      </div>
+    </a>
+  </div>
+  <div class="col-xs-12 visible-xs">
+    <a class="thumbnail" href="/theater/\{{this.id}}">
+      <img src="http://image.tmdb.org/t/p/w780/\{{this.backdrop_path}}" alt="">
+      <div class="logos">
+        <div class="rating">IMDB:<br>\{{this.vote_average}}</div>
+        <div class="full_logo">Full</div>
+      </div>
+      <div class="caption banner_text">
+        <h3>\{{this.original_title}} (\{{{trimString this.release_date 0 4}}})</h3>
+      </div>
+    </a>
+  </div>
+\{{/each}}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
+<script type="application/javascript">
+//$(function() {
+  
+  /*Handlebars.registerHelper('trimString', function(passedString, startstring, endstring){
+       var theString = passedString.substring( startstring, endstring );
+       return theString;
+    });*/
+//https://www.sitepoint.com/jquery-infinite-scrolling-demos/
+
+//})
+
+
+(function($){
+
+  $.fn.endlessScroll = function(options) {
+
+    var defaults = {
+      bottomPixels: 50,
+      fireOnce: true,
+      fireDelay: 150,
+      start_page:1,
+      loader: "<br />Loading...<br />",
+      data: "",
+      insertAfter: "div:last",
+      resetCounter: function() { return false; },
+      callback: function() { return true; },
+      ceaseFire: function() { return false; }
+    };
+
+    var options = $.extend({}, defaults, options);
+
+    var firing       = true;
+    var fired        = false;
+    var fireSequence = 0;
+    var page = options.start_page;
+
+    if (options.ceaseFire.apply(this) === true) {
+      firing = false;
+    }
+
+    if (firing === true) {
+      $(this).scroll(function() {
+        if (options.ceaseFire.apply(this) === true) {
+          firing = false;
+          return; // Scroll will still get called, but nothing will happen
+        }
+
+        if (this == document || this == window) {
+          var is_scrollable = $(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels;
+        } else {
+          // calculates the actual height of the scrolling container
+          var inner_wrap = $(".endless_scroll_inner_wrap", this);
+          if (inner_wrap.length == 0) {
+            inner_wrap = $(this).wrapInner("<div class=\"endless_scroll_inner_wrap\" />").find(".endless_scroll_inner_wrap");
+          }
+          var is_scrollable = inner_wrap.length > 0 &&
+            (inner_wrap.height() - $(this).height() <= $(this).scrollTop() + options.bottomPixels);
+        }
+
+        if (is_scrollable && (options.fireOnce == false || (options.fireOnce == true && fired != true))) {
+          if (options.resetCounter.apply(this) === true) fireSequence = 0;
+
+          fired = true;
+          fireSequence++;
+
+          //$(options.insertAfter).after("<div id=\"endless_scroll_loader\">" + options.loader + "</div>");
+
+          data = typeof options.data == 'function' ? options.data.apply(this, [fireSequence]) : options.data;
+
+          if (data !== false) {
+            /*$(options.insertAfter).after("<div id=\"endless_scroll_data\">" + data + "</div>");
+            $("div#endless_scroll_data").hide().fadeIn();
+            $("div#endless_scroll_data").removeAttr("id");*/
+
+            options.callback.apply(this, [fireSequence,page]);
+            page++;
+            //console.log("fire:"+fireSequence);
+            if (options.fireDelay !== false || options.fireDelay !== 0) {
+              $("body").after("<div id=\"endless_scroll_marker\"></div>");
+              // slight delay for preventing event firing twice
+              $("div#endless_scroll_marker").fadeTo(options.fireDelay, 1, function() {
+                $(this).remove();
+                fired = false;
+              });
+            }
+            else {
+              fired = false;
+            }
+          }
+
+          //$("div#endless_scroll_loader").remove();
+        }
+      });
+    }
+  };
+
+})(jQuery);
+
+
+// Script
+$(document).ready(function() {
+	var total_page = 0;
+	var current_page = 10;
+
+		Handlebars.registerHelper('trimString', function(passedString, startstring, endstring){
+       var theString = passedString.substring( startstring, endstring );
+       return theString;
+    });
+		
+    function parseParams(str) {
+        return str.split('&').reduce(function (params, param) {
+            var paramSplit = param.split('=').map(function (value) {
+                return decodeURIComponent(value.replace('+', ' '));
+            });
+            params[paramSplit[0]] = paramSplit[1];
+            return params;
+        }, {});
+    }
+		
+		function updatePages(pages) {
+		$("select[name=page]").empty()
+			for (i = 1; i <= pages; i++)
+				{ 
+						 $("select[name=page]").append($('<option>',
+						 {
+								value: i,
+								text : i 
+						}));
+				}
+				
+    }
+		function updateCurrentPage(current_page){
+			$("select[name=page] option[value="+current_page+"]").attr("selected","selected");
+		}
+   function initiFullMovies(){
+      var page = updateForm();
+			console.log("pre page :"+page)
+      getFullMovies(page,1);
+   }
+	
+	function updateForm(){
+		var hash = window.location.hash.substr(1);
+		var page = 1;
+		if(hash){
+			var form_json = parseParams( hash );
+			$("select[name=sort]").val(form_json.sort);
+			$("select[name=year]").val(form_json.year);
+			$("select[name=genre]").val(form_json.genre);
+			page = form_json.page;
+		}
+		return page;
+	}
+    
+  function getFullMovies(page,update_page){
+		 $('.movies-container').after("<div id=\"endless_scroll_loader\">..loading</div>");
+     data = $('.movie_form').serializeArray();
+     if(page){
+      data.find(item => item.name === 'page').value = page;
+     }
+     $.ajax({
+            dataType: 'json',
+            jsonpCallback: '_wrapper',
+            data: data,
+            type: 'POST',
+            url: "/moviesapi",
+            success: function (result) {
+              console.log(result);
+                  current_page = result.page;
+									total_page = result.total_page;
+									if(update_page){
+										updatePages(total_page);
+									}
+									updateCurrentPage(current_page)
+                  /**/
+									var source   = document.getElementById("movie-template").innerHTML;
+                  var template = Handlebars.compile(source);
+                  var html    = template(result);
+                  $('.movies-container').append(html);
+									$("div#endless_scroll_loader").remove();
+									var str = $( ".movie_form" ).serialize();
+     							location.hash = str;
+                }
+            });
+     
+  
+  }
+  initiFullMovies();
+  
+  
+
+	$(document).endlessScroll({
+		inflowPixels: 300,
+		insertAfter: ".movies-container",
+    start_page:++current_page,
+		callback: function(fireSequence,page) {
+			if(current_page<total_page)
+      getFullMovies(++current_page);
+		}
+	});
+	
+	$('select[name=sort]').on('change', function (e) {
+		$('.movies-container').empty();
+    getFullMovies(1,1);
+	});
+	$('select[name=page]').on('change', function (e) {
+		page = $(this).val();
+		$('.movies-container').empty();
+    getFullMovies(page,1);
+	});
+	$('.btn-filter').on('click', function (e) {
+		$('.movies-container').empty();
+    getFullMovies(1,1);
+	});
+	$('.btn-cancel').on('click', function (e) {
+		updateForm();
+	});
+});
+</script>
