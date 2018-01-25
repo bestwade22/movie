@@ -46,18 +46,43 @@
   border: 0;
   border-right: #ccc 1px solid;
 }
+
 .form-page{
   -webkit-appearance: none;
-  text-align-last: center;
   text-align: center;
   box-shadow: none;
   border-radius: 0;
   transition: unset;
 }
+.form-page.select-page{
+  text-indent: 47%;
+}
+    
 .borderless{
   border: 0;
 }
 #endless_scroll_loader{
   text-align:center;
   font-size:26px;
+}
+#back-to-top {
+    position: fixed;
+    bottom: 50px;
+    right: 30px;
+    z-index: 9999;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+    border: 0;
+    text-decoration: none;
+    transition: opacity 0.2s ease-out;
+    opacity: 0;
+    color: #000;
+    border-radius: 5px;
+    background: #D6D6D6;
+}
+#back-to-top.show {
+    opacity: 1;
 }
