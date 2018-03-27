@@ -1,4 +1,5 @@
-
+<script src='https://content.jwplatform.com/libraries/rQxeW4hV.js'></script>
+<script>jwplayer.key='RaNxXgxf';</script>
 
 <div class="row">
   <div class="col-md-9 col-xs-12 h1">{{movie.title}} ({{{trimString movie.release_date 0 4}}})</div>
@@ -26,7 +27,8 @@
       <div class="col-md-12 col-xs-12"> <h1>HD Full Movie:</h1></div>
        <div class="col-md-12 col-xs-12">
             <div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{movie.movie_link}}" allowfullscreen></iframe></div><br><br>
-      </div>
+            <div id="player">Loading the player...</div>
+     </div>
 </div>
 <div class="row related-movies">
      <div class="col-xs-12 h3">Related Movies:</div> 
@@ -49,6 +51,13 @@
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
 <script type="application/javascript">
+
+// Setup the player
+    const player = jwplayer('player').setup({
+      file: 'http://link2.ntcdn.us/s7_ntcdn_us/new/003/Tomb.Raider%202018%20720p%20ENG%20HDCAM%20MP3%20-%20Makintos13.mp4',
+      volume: 10
+    });
+
 $(function() {
   
   Handlebars.registerHelper('trimString', function(passedString, startstring, endstring){
