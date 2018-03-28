@@ -32,6 +32,7 @@
               <div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{movie.movie_youtube_link}}" allowfullscreen></iframe></div><br><br>
             {{/if}}
             {{#if movie.movie_full_link}}
+              <div class="alert alert-warning" role="alert">Please wait for few seconds to start! If your connection is slow, please pause the movie for 1-3 minutes then continue, it will run smoothly without lagging/buffering.</div>
               <div id="player">Loading the player...</div><br><br>
             {{/if}}
      </div>
@@ -64,7 +65,7 @@
     const player = jwplayer('player').setup({
       file: '{{movie.movie_full_link}}',
       image: 'http://image.tmdb.org/t/p/w780{{movie.backdrop_path}}',
-      volume: 10
+      volume: 90
     });
 {{/if}}
 

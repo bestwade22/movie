@@ -412,7 +412,7 @@ app.post('/moviesapi', function(req, res) {
       {$addFields: {  hotrate: { $multiply: [ {$divide: [ "$views", {$subtract: [ new Date(), "$insert_time" ]}]}, 1000000000 ] }, sortby: "$"+sort,release_year:{$substr: [ "$release_date", 0, 4 ]}}},
       {$match : {$and: [ match_genre ,match_year ]}},
       {$sort:sort_query},
-      {$group: { _id: null, count: { $sum: 1 },total_page:{ $sum: 1/7 },movies :{'$push':{'id':'$id','original_title':'$original_title','poster_path':'$poster_path','release_date':'$release_date','backdrop_path':'$backdrop_path','insert_time':'$insert_time','vote_average':'$vote_average','genre':'$genres','sortby':'$sortby','views':'$views','hotrate':'$hotrate','release_year':'$release_year'} } }},
+      {$group: { _id: null, count: { $sum: 1 },total_page:{ $sum: 1/7 },movies :{'$push':{'id':'$id','original_title':'$original_title','poster_path':'$poster_path','release_date':'$release_date','backdrop_path':'$backdrop_path','insert_time':'$insert_time','vote_average':'$vote_average','genre':'$genres','sortby':'$sortby','views':'$views','hotrate':'$hotrate','release_year':'$release_year','movie_full_link':'$movie_full_link'} } }},
             {$project:{'_id':false,"count":true,page:{$multiply: [1,page]},"total_page":{$ceil:"$total_page" }, movies:{ $slice: [ "$movies", page*7-7,7 ]}}}
                                
             //,{$project:{"movies.id":true}}'$$ROOT'

@@ -141,7 +141,10 @@
       <img src="http://image.tmdb.org/t/p/w500/\{{this.poster_path}}" alt="">
       <div class="logos">
         <div class="rating">IMDB:<br>\{{this.vote_average}}</div>
-        <div class="full_logo">Full</div>
+        \{{#if this.movie_full_link}}<div class="hd_logo">HD</div> 
+				\{{else}}
+				<div class="full_logo">Full</div> 
+				\{{/if}}
       </div>
       <div class="caption">
         <h3>\{{this.original_title}} (\{{{trimString this.release_date 0 4}}})</h3>
