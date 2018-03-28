@@ -1,4 +1,5 @@
-
+<script src='https://content.jwplatform.com/libraries/rQxeW4hV.js'></script>
+<script>jwplayer.key='RaNxXgxf';</script>
 
 <div class="page-header">
 <h3>Movie Insert</h3>
@@ -8,22 +9,29 @@
   action="/insert/submit" method="POST">
  
   <div class="form-group">
-    <label for="fieldImdbId" class="col-sm-2 control-label">
+    <label for="fieldImdbId" class="col-sm-1 control-label">
     Imdb ID</label>
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <input type="text" class="form-control" id="fieldImdbId"
       name="imdbid">
     </div>
   </div> <!-- End of form-group -->
  <div class="form-group">
-    <label for="fieldLink" class="col-sm-2 control-label">
+    <label for="fieldLink" class="col-sm-1 control-label">
     youtube link:</label>
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <input type="text" class="form-control" id="fieldLink"
       name="link">
     </div>
   </div>
-  
+  <div class="form-group">
+    <label for="fieldLink" class="col-sm-1 control-label">
+    full movie link:</label>
+    <div class="col-sm-3">
+      <input type="text" class="form-control" id="fieldLink"
+      name="full_link">
+    </div>
+  </div>
   <div class="form-group">
     <div class="col-sm-4">
       <button type="submit" class="btn btn-default">Submit</button>
@@ -37,10 +45,21 @@
   <div  class="col-md-12 col-xs-12 message"><h3>{{#if query.message}}{{query.message}}{{/if}}</h3></div>
   {{#each db}}
     <div class="col-md-3 col-xs-3 id_{{this.id}} movie_box">
-    {{this.title}}({{{trimString this.release_date 0 4}}})
-    <div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{this.movie_link}}" allowfullscreen></iframe></div>
+    {{this.title}}({{{trimString this.release_date 0 4}}})  view:{{this.views}}
+    {{#if this.movie_youtube_link}}
+              <div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{this.movie_youtube_link}}" allowfullscreen></iframe></div>
+    {{/if}}
+    {{#if this.movie_full_link}}
+      <div id="player{{@index}}">Loading the player...</div>
+      <script>
+      jwplayer("player{{@index}}").setup({
+        image: 'http://image.tmdb.org/t/p/w780{{this.backdrop_path}}',
+        file: "{{this.movie_full_link}}"
+      });
+      </script>
+    {{/if}}
     <input class = "btnremove" type="button" value="remove" movie_id="{{this.id}}"/>
-    <input class = "btnupdate" type="button" value="update" movie_id="{{this.id}}"/>
+    <input class = "btnupdate" type="button" value="update" movie_id="{{this.id}}"/>{{this.imdbid}}
     </div>
   {{/each}}
 </div>
@@ -104,7 +123,7 @@ $(function() {
                   console.log(result.movies);
                   $(".movie_box").remove();
                   $.each(result.movies, function (i, v) {
-                      temp = '<div class="col-md-3 col-xs-3 id_'+v.id+' movie_box">'+v.title+' ('+v.release_date.substring( 0, 4 )+')<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/'+v.movie_link+'" allowfullscreen></iframe></div><input class = "btnremove" type="button" value="remove" movie_id="'+v.id+'"/><input class = "btnupdate" type="button" value="update" movie_id="'+v.id+'"/></div>'
+                      temp = '<div class="col-md-3 col-xs-3 id_'+v.id+' movie_box">'+v.title+' ('+v.release_date.substring( 0, 4 )+')'+ ((v.movie_youtube_link) ? ('<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/'+v.movie_youtube_link+'" allowfullscreen></iframe></div>') : '')+((v.movie_full_link) ? ('<div id="player'+i+'">Loading the player...</div><script>jwplayer("player'+i+'").setup({image:"http://image.tmdb.org/t/p/w780'+v.backdrop_path+'",file: "'+v.movie_full_link+'"});</'+'script>') : '')+'<input class = "btnremove" type="button" value="remove" movie_id="'+v.id+'"/><input class = "btnupdate" type="button" value="update" movie_id="'+v.id+'"/>'+v.imdbid+'</div>';
                       $(".movie_list").append(temp);
                   });
                   $('.page_num').html(topage);

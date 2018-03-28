@@ -288,7 +288,8 @@ app.post('/insert/submit',function(req,res){
               detail[0].cast=cast;
               detail[0].reviews=reviews;
               detail[0].trailers=trailers;
-              detail[0].movie_link=req.body.link;
+              detail[0].movie_youtube_link=req.body.link;
+              detail[0].movie_full_link=req.body.full_link;
               detail[0].imdbid=imdbId;
               detail[0].insert_time = time_now;
               console.log(detail[0]);
@@ -299,10 +300,19 @@ app.post('/insert/submit',function(req,res){
                   db.close();
                 }else{
                   var collection = db.collection('movies');
-                  
                   collection.find({"imdbid":imdbId}).toArray(function(error,result){
                     if(result.length){
-                        collection.update({"imdbid":imdbId},{$set:{"movie_link":req.body.link,"insert_time":time_now}},function (err, result) {
+                      var set = {};
+                      set.insert_time = time_now;
+                      if(req.body.link){
+                        set.movie_youtube_link = req.body.link;
+                      }
+                      if(req.body.full_link){
+                        set.movie_full_link = req.body.full_link;
+                      }
+                      console.log(set);
+                      //{"movie_youtube_link":req.body.link,"movie_full_link":req.body.full_link,"insert_time":time_now}
+                        collection.update({"imdbid":imdbId},{$set:set},function (err, result) {
                             if (err) throw err;
                             res.redirect('/insert?message=finish update: '+movie.original_title);
                          });
