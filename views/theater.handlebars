@@ -1,4 +1,4 @@
-{{#if movie.movie_full_link}}
+{{#if movie.movie_full_link2}}
 <script src='https://content.jwplatform.com/libraries/rQxeW4hV.js'></script>
 <script>jwplayer.key='RaNxXgxf';</script>
 {{/if}}
@@ -31,18 +31,20 @@
             {{#if movie.movie_youtube_link}}
               <div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{movie.movie_youtube_link}}" allowfullscreen></iframe></div><br><br>
             {{/if}}
-            {{#if movie.movie_full_link}}
+            {{#if movie.movie_full_link2}}
               <div class="alert alert-warning" role="alert">Please wait for few seconds to start! If your connection is slow, please pause the movie for 1-3 minutes then continue, it will run smoothly without lagging/buffering.</div>
               <div id="player">Loading the player...</div><br><br>
             {{/if}}
             <!--<div class="embed-responsive embed-responsive-16by9">
               <iframe id="embed_player" class="embed-responsive-item" src="//vidlink.org/embed/5ae1a22f914be6d66c2b041a" frameborder="0" allowfullscreen=""></iframe>
-            </div>
+            </div>-->
+            {{#if movie.movie_full_link}}
             <div class="embed-responsive embed-responsive-16by9">
               <video  class="embed-responsive-item" controls="controls" >    
-                       <source src="https://vidlink.org/redirect?url=https%3A%2F%2F00e9e64bacd03a053714ebdd3be26c14051e7ebc29ef7d120f-apidata.googleusercontent.com%2Fdownload%2Fdrive%2Fv3%2Ffiles%2F1tC6oAbLYLLQ5_AkUUEXbsEMGBdiIsquk%3Fqk%3DAD5uMEuvSg6ffVhuK0xdCu9egBjmFdOlT4sOrVrULPJJNi1UZl-qCoD90z8CGZ2pWI2UTRHQcLZXbwlA-WBGXS_laH7BfLhZYenc3ggQep5u3ohlk-Eu1V8fopVrgK8pQAqyBmkIXOfHcApuKK3RmjchK_whSlkAiV42tuSvhao5dazTErjgCYm3JOM2UtLsLRkzSj9LX1zPTL7KomzkwH60xzOIema-4VNQ-NUqvDHOyg5KGxcKmB_832JH76kl9UWu-InVJo3MCkigoMfU8pub_xzmzmWdqpFXkv118sdvXWayZAq_RG9VbdDpRiiDTsjwMQ28e_q5Rtdmpd9rlJ-ngcDNyCME2DBW_8F_TnckU6zi54M-sapf6uYWhlcjJUdY5dqA44akvb4rB568NA5UMNxzkDcBovgv-KbLBkjzxBdHQy_a_hlEX-Lb_0WL9yGLOGCwXCCsRJy95Sc09RgwuA1oQAsZqWQnjGucX6mK3V-gKVlkTQU1kFbeLrTdFzjemdIZ3_pYS2yjr4-Hk1FkAhbs9IJb94UY8gj7YbgDz06YRlYDCXCxCu9N0GjJ_pRnfu9Kqt_O3lUDw315iTeNOc3oUJ58KI2QN3RkO1Rkg0Kt548Qh705GNpyU3EOix9tCbT4KAUqgGs9im6dv6FMDsNGQhQV8j6WNtCdvGEjAva_9QT8uOCf7TpMd6WsHznM19T1H1pMRNtlMXVixrXo-PStgfoQJGVayDq_4HOyvoRkUsvUDOt2A-B1yPoZwOjOjCS05LnfqSjbtYQZlIrENd6JA-HRzCMRyQb_n3JsnSpyTBrawaMPoRBBXE6AsDG2N4BPncd6o4Yyji-RakL9Mn2a8-H-5RAd79Hh41oBpkKDa3D51mmrKYVJ6wsNG-8VdLTBkyb_1ZnvvceiQ8f_AV-uU-C03JxMpnyXCuXjaLcwo8V3J6I&size=2397962156" type="video/mp4"> 
+                       <source src="{{movie.movie_full_link}}" type="video/mp4"> 
               </video>
-            </div>-->
+            </div>
+            {{/if}}
      </div>
 </div>
 <div class="row related-movies">
@@ -68,10 +70,10 @@
 <script type="application/javascript">
 
 
-{{#if movie.movie_full_link}}
+{{#if movie.movie_full_link2}}
 // Setup the player
     const player = jwplayer('player').setup({
-      file: '{{movie.movie_full_link}}',
+      file: '{{movie.movie_full_link2}}',
       image: 'http://image.tmdb.org/t/p/w780{{movie.backdrop_path}}',
       volume: 90
     });

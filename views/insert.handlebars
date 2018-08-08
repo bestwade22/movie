@@ -49,14 +49,21 @@
     {{#if this.movie_youtube_link}}
               <div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{this.movie_youtube_link}}" allowfullscreen></iframe></div>
     {{/if}}
-    {{#if this.movie_full_link}}
+    {{#if this.movie_full_link2}}
       <div id="player{{@index}}">Loading the player...</div>
       <script>
       jwplayer("player{{@index}}").setup({
         image: 'http://image.tmdb.org/t/p/w780{{this.backdrop_path}}',
-        file: "{{this.movie_full_link}}"
+        file: "{{this.movie_full_link2}}"
       });
       </script>
+    {{/if}}
+    {{#if this.movie_full_link}}
+      <div class="embed-responsive embed-responsive-16by9">
+        <video  class="embed-responsive-item" controls="controls" >    
+                 <source src="{{this.movie_full_link}}" type="video/mp4"> 
+        </video>
+      </div>
     {{/if}}
     <input class = "btnremove" type="button" value="remove" movie_id="{{this.id}}"/>
     <input class = "btnupdate" type="button" value="update" movie_id="{{this.id}}"/>{{this.imdbid}}
@@ -123,7 +130,7 @@ $(function() {
                   console.log(result.movies);
                   $(".movie_box").remove();
                   $.each(result.movies, function (i, v) {
-                      temp = '<div class="col-md-3 col-xs-3 id_'+v.id+' movie_box">'+v.title+' ('+v.release_date.substring( 0, 4 )+')  view:'+v.views+ ((v.movie_youtube_link) ? ('<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/'+v.movie_youtube_link+'" allowfullscreen></iframe></div>') : '')+((v.movie_full_link) ? ('<div id="player'+i+'">Loading the player...</div><script>jwplayer("player'+i+'").setup({image:"http://image.tmdb.org/t/p/w780'+v.backdrop_path+'",file: "'+v.movie_full_link+'"});</'+'script>') : '')+'<input class = "btnremove" type="button" value="remove" movie_id="'+v.id+'"/><input class = "btnupdate" type="button" value="update" movie_id="'+v.id+'"/>'+v.imdbid+'</div>';
+                      temp = '<div class="col-md-3 col-xs-3 id_'+v.id+' movie_box">'+v.title+' ('+v.release_date.substring( 0, 4 )+')  view:'+v.views+ ((v.movie_youtube_link) ? ('<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/'+v.movie_youtube_link+'" allowfullscreen></iframe></div>') : '')+((v.movie_full_link2) ? ('<div id="player'+i+'">Loading the player...</div><script>jwplayer("player'+i+'").setup({image:"http://image.tmdb.org/t/p/w780'+v.backdrop_path+'",file: "'+v.movie_full_link2+'"});</'+'script>') : '')+((v.movie_full_link) ? ('<div class="embed-responsive embed-responsive-16by9"><video  class="embed-responsive-item" controls="controls" ><source src="'+v.movie_full_link+'" type="video/mp4"></video></div>') : '')+'<input class = "btnremove" type="button" value="remove" movie_id="'+v.id+'"/><input class = "btnupdate" type="button" value="update" movie_id="'+v.id+'"/>'+v.imdbid+'</div>';
                       $(".movie_list").append(temp);
                   });
                   $('.page_num').html(topage);
